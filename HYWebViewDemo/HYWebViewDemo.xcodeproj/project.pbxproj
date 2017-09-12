@@ -14,6 +14,8 @@
 		8E27B30B1F677CA900B6F5D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E27B30A1F677CA900B6F5D5 /* Assets.xcassets */; };
 		8E27B30E1F677CA900B6F5D5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E27B30C1F677CA900B6F5D5 /* LaunchScreen.storyboard */; };
 		8E27B3181F677EBD00B6F5D5 /* HYWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B3171F677EBD00B6F5D5 /* HYWebView.m */; };
+		8E27B31B1F67A61300B6F5D5 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B31A1F67A61300B6F5D5 /* SecondViewController.m */; };
+		8E27B31E1F67A62900B6F5D5 /* OneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B31D1F67A62900B6F5D5 /* OneViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +31,10 @@
 		8E27B30F1F677CA900B6F5D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8E27B3161F677EBD00B6F5D5 /* HYWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYWebView.h; sourceTree = "<group>"; };
 		8E27B3171F677EBD00B6F5D5 /* HYWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYWebView.m; sourceTree = "<group>"; };
+		8E27B3191F67A61300B6F5D5 /* SecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
+		8E27B31A1F67A61300B6F5D5 /* SecondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
+		8E27B31C1F67A62900B6F5D5 /* OneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneViewController.h; sourceTree = "<group>"; };
+		8E27B31D1F67A62900B6F5D5 /* OneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OneViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +72,10 @@
 				8E27B3021F677CA900B6F5D5 /* AppDelegate.m */,
 				8E27B3041F677CA900B6F5D5 /* ViewController.h */,
 				8E27B3051F677CA900B6F5D5 /* ViewController.m */,
+				8E27B31C1F67A62900B6F5D5 /* OneViewController.h */,
+				8E27B31D1F67A62900B6F5D5 /* OneViewController.m */,
+				8E27B3191F67A61300B6F5D5 /* SecondViewController.h */,
+				8E27B31A1F67A61300B6F5D5 /* SecondViewController.m */,
 				8E27B3071F677CA900B6F5D5 /* Main.storyboard */,
 				8E27B30A1F677CA900B6F5D5 /* Assets.xcassets */,
 				8E27B30C1F677CA900B6F5D5 /* LaunchScreen.storyboard */,
@@ -163,8 +173,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E27B31B1F67A61300B6F5D5 /* SecondViewController.m in Sources */,
 				8E27B3181F677EBD00B6F5D5 /* HYWebView.m in Sources */,
 				8E27B3061F677CA900B6F5D5 /* ViewController.m in Sources */,
+				8E27B31E1F67A62900B6F5D5 /* OneViewController.m in Sources */,
 				8E27B3031F677CA900B6F5D5 /* AppDelegate.m in Sources */,
 				8E27B3001F677CA900B6F5D5 /* main.m in Sources */,
 			);
