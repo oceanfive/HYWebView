@@ -13,6 +13,7 @@
 		8E27B3091F677CA900B6F5D5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E27B3071F677CA900B6F5D5 /* Main.storyboard */; };
 		8E27B30B1F677CA900B6F5D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E27B30A1F677CA900B6F5D5 /* Assets.xcassets */; };
 		8E27B30E1F677CA900B6F5D5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E27B30C1F677CA900B6F5D5 /* LaunchScreen.storyboard */; };
+		8E27B3181F677EBD00B6F5D5 /* HYWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B3171F677EBD00B6F5D5 /* HYWebView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		8E27B30A1F677CA900B6F5D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8E27B30D1F677CA900B6F5D5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8E27B30F1F677CA900B6F5D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8E27B3161F677EBD00B6F5D5 /* HYWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYWebView.h; sourceTree = "<group>"; };
+		8E27B3171F677EBD00B6F5D5 /* HYWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYWebView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,7 @@
 		8E27B2FD1F677CA900B6F5D5 /* HYWebViewDemo */ = {
 			isa = PBXGroup;
 			children = (
+				8E27B3151F677EA800B6F5D5 /* HYWebView */,
 				8E27B3011F677CA900B6F5D5 /* AppDelegate.h */,
 				8E27B3021F677CA900B6F5D5 /* AppDelegate.m */,
 				8E27B3041F677CA900B6F5D5 /* ViewController.h */,
@@ -77,6 +81,15 @@
 				8E27B2FF1F677CA900B6F5D5 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8E27B3151F677EA800B6F5D5 /* HYWebView */ = {
+			isa = PBXGroup;
+			children = (
+				8E27B3161F677EBD00B6F5D5 /* HYWebView.h */,
+				8E27B3171F677EBD00B6F5D5 /* HYWebView.m */,
+			);
+			name = HYWebView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,6 +163,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E27B3181F677EBD00B6F5D5 /* HYWebView.m in Sources */,
 				8E27B3061F677CA900B6F5D5 /* ViewController.m in Sources */,
 				8E27B3031F677CA900B6F5D5 /* AppDelegate.m in Sources */,
 				8E27B3001F677CA900B6F5D5 /* main.m in Sources */,
