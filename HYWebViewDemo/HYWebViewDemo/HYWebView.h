@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  加载进度
  */
-- (void)webView:(HYWebView *)webView didUpdateProgress:(CGFloat)progress;
+- (void)webView:(HYWebView *)webView didUpdateProgress:(float)progress;
 
 /**
  js调用oc方法
@@ -95,6 +95,16 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)webView:(HYWebView *)webView didReceiveScriptMessage:(id)message name:(NSString *)name url:(NSURL *)url;
 
 @end
+
+/**
+ 进度条位置
+ */
+typedef NS_ENUM(NSUInteger, HYWebViewProgressPosition) {
+    HYWebViewProgressPositionNavigationBarBottomIn, //导航栏底部（进度条在导航栏内）- 默认
+    HYWebViewProgressPositionNavigationBarBottomOut,    //导航栏外部（进度条在导航栏外）
+    HYWebViewProgressPositionStatusBarTop,  //状态栏顶部
+    HYWebViewProgressPositionStatusBarBottom,   //状态栏底部
+};
 
 @interface HYWebView : UIView
 
@@ -206,6 +216,33 @@ NS_ASSUME_NONNULL_BEGIN
  
  */
 - (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^ _Nullable)(id _Nullable result, NSError * _Nullable error))completionHandler;
+
+#pragma mark - progress
+
+/**
+ 是否显示进度条
+ */
+@property (nonatomic, assign) BOOL isShowProgressView;
+
+/**
+ 进度条位置
+ */
+@property (nonatomic, assign) HYWebViewProgressPosition progressPosition;
+
+/**
+ 进度，0.0-1.0
+ */
+@property (nonatomic, assign) float progress;
+
+/**
+ 进度颜色（已完成）
+ */
+@property (nonatomic, strong) UIColor *progressColor;
+
+/**
+ 轨道颜色(未完成)
+ */
+@property (nonatomic, strong) UIColor *trackColor;
 
 @end
 

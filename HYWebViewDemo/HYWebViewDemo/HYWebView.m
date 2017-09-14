@@ -26,14 +26,26 @@
 @property (nonatomic, strong) JSContext *jsContext;
 @property (nonatomic, strong) NSArray *messageNames;
 
+@property (nonatomic, strong) UIProgressView *progressView;
+@property (nonatomic, assign) float progressHeight; //设置无效，默认为2
+
 @end
 
 @implementation HYWebView
 
 #pragma mark - helper
 - (BOOL)isiOS8Later{
-    return NO;
     return NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_8_0;
+}
+
+- (UIViewController *)findVC {
+    for (UIView *next = [self superview]; next; next = next.superview) {
+        UIResponder *nextResponder = [next nextResponder];
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)nextResponder;
+        }
+    }
+    return nil;
 }
 
 #pragma mark - lazy
@@ -95,6 +107,7 @@
     self.wkWebView.allowsBackForwardNavigationGestures = YES;
     [self initWKWebViewKVO];
     [self addSubview:self.wkWebView];
+    [self initProgressView];
 }
 
 - (void)initUIWebViewWithFrame:(CGRect)frame{
@@ -104,6 +117,41 @@
     self.uiWebView.autoresizesSubviews = YES;
     self.uiWebView.opaque = NO;
     [self addSubview:self.uiWebView];
+    [self initProgressView];
+}
+
+- (void)initProgressView{
+    [self initProgressViewSetup];
+    self.isShowProgressView = YES;
+    self.progressPosition = HYWebViewProgressPositionNavigationBarBottomIn;
+    self.progressHeight = 2.0f;
+    self.progress = 0.0;
+    self.progressColor = [UIColor colorWithRed:22.f / 255.f green:126.f / 255.f blue:251.f / 255.f alpha:1.0];
+    self.trackColor = [UIColor clearColor];
+}
+
+- (void)initProgressViewSetup{
+    self.progressView = [[UIProgressView alloc] init];
+    self.progressView.backgroundColor = [UIColor clearColor];
+    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+    [keyWindow addSubview:self.progressView];
+    [keyWindow bringSubviewToFront:self.progressView];
+}
+
+- (void)resetProgressView{
+    if (self.progressView) {
+        [self.progressView removeFromSuperview];
+        self.progress = 0.0;
+    }
+    [self initProgressViewSetup];
+    [self resetProgressViewProperty];
+    [self setNeedsLayout]; //旧的已被销毁，新的需要重新布局
+}
+
+- (void)resetProgressViewProperty{
+    self.progressView.progress = self.progress;
+    self.progressView.progressTintColor = self.progressColor;
+    self.progressView.trackTintColor = self.trackColor;
 }
 
 #pragma mark - KVO
@@ -123,10 +171,8 @@
     } else if ([keyPath isEqualToString:kKVOPropertyURL]) {
         _URL = (NSURL *)newValue;
     } else if ([keyPath isEqualToString:kKVOPropertyEstimatedProgress]) {
-        _estimatedProgress = [(NSNumber *)newValue doubleValue];
-        if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didUpdateProgress:)]) {
-            [self.delegate webView:self didUpdateProgress:_estimatedProgress];
-        }
+        _estimatedProgress = [(NSNumber *)newValue floatValue];
+        [self _didUpdateProgress:_estimatedProgress];
     }
 }
 
@@ -155,6 +201,8 @@
         return self.uiWebView.scrollView;
     }
 }
+
+#pragma mark - setter
 
 #pragma mark - 操作
 - (BOOL)canGoBack{
@@ -269,12 +317,25 @@
         [self.delegate webViewDidFinishLoad:self];
     }
     [self handlerHistory];
+    self.progress = 1.0; //使加载到100%再消失
+    [self resetProgressView];
 }
 
 - (void)_didFailLoadWithError:(NSError *)error{
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
         [self.delegate webView:self didFailLoadWithError:error];
     }
+}
+
+- (void)_didUpdateProgress:(float)progress{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didUpdateProgress:)]) {
+        [self.delegate webView:self didUpdateProgress:progress];
+    }
+//    if (self.isLoading) {
+//        self.progress = 1.0;
+//        [self resetProgressView];
+//    }
+    self.progress = progress;
 }
 
 #pragma mark - WKNavigationDelegate
@@ -388,6 +449,82 @@
     }
 }
 
+#pragma mark - progress
+- (void)setIsShowProgressView:(BOOL)isShowProgressView{
+    _isShowProgressView = isShowProgressView;
+    [self setNeedsLayout];
+}
+
+- (void)setProgressPosition:(HYWebViewProgressPosition)progressPosition{
+    _progressPosition = progressPosition;
+    [self setNeedsLayout];
+}
+
+- (void)setProgressHeight:(float)progressHeight{
+    _progressHeight = progressHeight;
+    [self setNeedsLayout];
+}
+
+- (void)setProgress:(float)progress{
+    if (progress > 1.0) {
+        progress = 1.0;
+    }
+    if (progress < 0.0) {
+        progress = 0.0;
+    }
+    //"增加"的进度才有动画效果，"减少"的进度会从新加载，比如一个页面还没有加载完成又重新打开了一个网页
+    BOOL animated = progress > _progress;
+    if (!animated) {
+        progress = 0.0;
+    }
+    _progress = progress;
+    [self.progressView setProgress:progress animated:animated];
+}
+
+- (void)setProgressColor:(UIColor *)progressColor{
+    _progressColor = progressColor;
+    self.progressView.progressTintColor = progressColor;
+}
+
+- (void)setTrackColor:(UIColor *)trackColor{
+    _trackColor = trackColor;
+    self.progressView.trackTintColor = trackColor;
+}
+
+#pragma mark - layout
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    if (self.isShowProgressView) {
+        CGFloat width = [UIScreen mainScreen].bounds.size.width;
+        CGRect frame = CGRectMake(0, 64, width, self.progressHeight);
+        switch (self.progressPosition) {
+            case HYWebViewProgressPositionNavigationBarBottomIn: {
+                frame = CGRectMake(0, 64 - 2, width, self.progressHeight);
+            }   break;
+                
+            case HYWebViewProgressPositionNavigationBarBottomOut: {
+                frame = CGRectMake(0, 64, width, self.progressHeight);
+            }   break;
+                
+            case HYWebViewProgressPositionStatusBarTop: {
+                frame = CGRectMake(0, 0, width, self.progressHeight);
+            }   break;
+                
+            case HYWebViewProgressPositionStatusBarBottom: {
+                frame = CGRectMake(0, 20, width, self.progressHeight);
+            }   break;
+                
+            default:
+                break;
+        }
+        self.progressView.frame = frame;
+    } else {
+        if (self.progressView) {
+            [self.progressView removeFromSuperview];
+        }
+    }
+}
+
 #pragma mark - dealloc
 - (void)dealloc{
     if ([self isiOS8Later]) {
@@ -406,6 +543,8 @@
         [self.uiWebView removeFromSuperview];
         self.uiWebView = nil;
     }
+    [self.progressView removeFromSuperview];
+    self.progressView = nil;
 }
 
 @end

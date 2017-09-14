@@ -8,7 +8,6 @@
 
 #import "SecondViewController.h"
 #import "HYWebView.h"
-
 #import <WebKit/WebKit.h>
 
 static NSUInteger kBackTag = 300;
@@ -23,6 +22,7 @@ static NSUInteger kHistoryTag = 302;
 
 @property (nonatomic, strong) WKWebViewConfiguration *wkWebViewConfiguration;
 
+
 @end
 
 @implementation SecondViewController
@@ -30,10 +30,14 @@ static NSUInteger kHistoryTag = 302;
 - (HYWebView *)webView{
     if (!_webView) {
         CGRect bounds = self.view.bounds;
-        bounds.size.height -= 64;
+        bounds.size.height -= 0;
 //        _webView = [[HYWebView alloc] initWithFrame:bounds configuration:self.wkWebViewConfiguration];
         _webView = [[HYWebView alloc] initWithFrame:bounds scriptMessageHandlerNames:@[@"callJsAlert"]];
         _webView.delegate = self;
+        _webView.progressPosition = HYWebViewProgressPositionNavigationBarBottomIn;
+//        _webView.progressColor = [UIColor redColor];
+//        _webView.trackColor = [UIColor blueColor];
+        _webView.isShowProgressView = YES;
         [self.view addSubview:_webView];
     }
     return _webView;
@@ -64,12 +68,11 @@ static NSUInteger kHistoryTag = 302;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    self.webView.backgroundColor = [UIColor whiteColor];
-//    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.urlString]];
-//    [self.webView loadRequest:request];
-    NSURL *url = [[NSBundle mainBundle] URLForResource:@"Test.html" withExtension:nil];
-    [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
+    self.webView.backgroundColor = [UIColor purpleColor];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:self.urlString]];
+    [self.webView loadRequest:request];
+//    NSURL *url = [[NSBundle mainBundle] URLForResource:@"Test.html" withExtension:nil];
+//    [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
     
     UIButton *myButton = [UIButton buttonWithType:UIButtonTypeCustom];
     myButton.backgroundColor = [UIColor orangeColor];
@@ -79,7 +82,7 @@ static NSUInteger kHistoryTag = 302;
     [myButton addTarget:self action:@selector(myButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:myButton];
     myButton.tag = kBackTag;
-    myButton.frame = CGRectMake(300, 200, 100, 100);
+    myButton.frame = CGRectMake(300, 200, 100, 50);
     
     
     UIButton *myButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -90,7 +93,7 @@ static NSUInteger kHistoryTag = 302;
     [myButton2 addTarget:self action:@selector(myButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:myButton2];
     myButton2.tag = kForwardTag;
-    myButton2.frame = CGRectMake(300, 350, 100, 100);
+    myButton2.frame = CGRectMake(300, 270, 100, 50);
     
     UIButton *myButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
     myButton3.backgroundColor = [UIColor orangeColor];
@@ -100,7 +103,27 @@ static NSUInteger kHistoryTag = 302;
     [myButton3 addTarget:self action:@selector(myButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:myButton3];
     myButton3.tag = kHistoryTag;
-    myButton3.frame = CGRectMake(300, 500, 100, 100);
+    myButton3.frame = CGRectMake(300, 350, 100, 50);
+    
+//    CGRect frame = CGRectMake(0, 200, [UIScreen mainScreen].bounds.size.width, 5);
+//    UIProgressView *progressView = [[UIProgressView alloc] initWithFrame:frame];
+//    progressView.progressViewStyle = UIProgressViewStyleBar;
+//    progressView.progress = 0.5;
+//    progressView.progressTintColor = [UIColor redColor];
+//    progressView.trackTintColor = [UIColor whiteColor];
+//    [self.view addSubview:progressView];
+//    self.progressView = progressView;
+    
+    /*
+     @property(nonatomic) float progress;                        // 0.0 .. 1.0, default is 0.0. values outside are pinned.
+     @property(nonatomic, strong, nullable) UIColor* progressTintColor  NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
+     @property(nonatomic, strong, nullable) UIColor* trackTintColor     NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
+     @property(nonatomic, strong, nullable) UIImage* progressImage      NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
+     @property(nonatomic, strong, nullable) UIImage* trackImage         NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
+     
+     - (void)setProgress:(float)progress animated:(BOOL)animated NS_AVAILABLE_IOS(5_0);
+     */
+    
 }
 
 - (void)myButtonClick:(UIButton *)button{
@@ -139,11 +162,17 @@ static NSUInteger kHistoryTag = 302;
     
     if (button.tag == kBackTag) {
 
-        [self.webView goBack:1];
+//        [self.webView goBack:1];
+        if ([self.webView canGoBack]) {
+            [self.webView goBack];
+        }
         
     } else if (button.tag == kForwardTag) {
         
-        [self.webView goForward:1];
+//        [self.webView goForward:1];
+        if ([self.webView canGoForward]) {
+            [self.webView goForward];
+        }
         
     } else if (button.tag == kHistoryTag) {
         
@@ -164,7 +193,7 @@ static NSUInteger kHistoryTag = 302;
                 NSLog(@"OC调用JS方法失败-----%@", error);
             }
         }];
-        
+     
     }
     
 }
@@ -193,7 +222,7 @@ static NSUInteger kHistoryTag = 302;
     
 }
 
-- (void)webView:(HYWebView *)webView didUpdateProgress:(CGFloat)progress{
+- (void)webView:(HYWebView *)webView didUpdateProgress:(float)progress{
     NSLog(@"加载进度更新:%f", progress);
 
 }
