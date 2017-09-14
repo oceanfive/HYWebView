@@ -16,9 +16,13 @@
 		8E27B3181F677EBD00B6F5D5 /* HYWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B3171F677EBD00B6F5D5 /* HYWebView.m */; };
 		8E27B31B1F67A61300B6F5D5 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B31A1F67A61300B6F5D5 /* SecondViewController.m */; };
 		8E27B31E1F67A62900B6F5D5 /* OneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B31D1F67A62900B6F5D5 /* OneViewController.m */; };
+		8E7C5B331F69333600CBABEA /* Test.html in Resources */ = {isa = PBXBuildFile; fileRef = 8E7C5B321F69333600CBABEA /* Test.html */; };
+		B684233B609DF3DCAA326400 /* libPods-HYWebViewDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 68C3EF42855A010537EFAB6F /* libPods-HYWebViewDemo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		05A70A109A550FEDFBCC0018 /* Pods-HYWebViewDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HYWebViewDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-HYWebViewDemo/Pods-HYWebViewDemo.release.xcconfig"; sourceTree = "<group>"; };
+		68C3EF42855A010537EFAB6F /* libPods-HYWebViewDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HYWebViewDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E27B2FB1F677CA900B6F5D5 /* HYWebViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HYWebViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E27B2FF1F677CA900B6F5D5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8E27B3011F677CA900B6F5D5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -35,6 +39,8 @@
 		8E27B31A1F67A61300B6F5D5 /* SecondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
 		8E27B31C1F67A62900B6F5D5 /* OneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneViewController.h; sourceTree = "<group>"; };
 		8E27B31D1F67A62900B6F5D5 /* OneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OneViewController.m; sourceTree = "<group>"; };
+		8E7C5B321F69333600CBABEA /* Test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Test.html; sourceTree = "<group>"; };
+		DECD9E230C8E80AB154D3F5E /* Pods-HYWebViewDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HYWebViewDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HYWebViewDemo/Pods-HYWebViewDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B684233B609DF3DCAA326400 /* libPods-HYWebViewDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,6 +60,8 @@
 			children = (
 				8E27B2FD1F677CA900B6F5D5 /* HYWebViewDemo */,
 				8E27B2FC1F677CA900B6F5D5 /* Products */,
+				C2BD7CB9B03DFD69750CC504 /* Pods */,
+				D846D687186EEF10F62129B1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -76,6 +85,7 @@
 				8E27B31D1F67A62900B6F5D5 /* OneViewController.m */,
 				8E27B3191F67A61300B6F5D5 /* SecondViewController.h */,
 				8E27B31A1F67A61300B6F5D5 /* SecondViewController.m */,
+				8E7C5B321F69333600CBABEA /* Test.html */,
 				8E27B3071F677CA900B6F5D5 /* Main.storyboard */,
 				8E27B30A1F677CA900B6F5D5 /* Assets.xcassets */,
 				8E27B30C1F677CA900B6F5D5 /* LaunchScreen.storyboard */,
@@ -102,6 +112,23 @@
 			name = HYWebView;
 			sourceTree = "<group>";
 		};
+		C2BD7CB9B03DFD69750CC504 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DECD9E230C8E80AB154D3F5E /* Pods-HYWebViewDemo.debug.xcconfig */,
+				05A70A109A550FEDFBCC0018 /* Pods-HYWebViewDemo.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		D846D687186EEF10F62129B1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				68C3EF42855A010537EFAB6F /* libPods-HYWebViewDemo.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -109,9 +136,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8E27B3121F677CA900B6F5D5 /* Build configuration list for PBXNativeTarget "HYWebViewDemo" */;
 			buildPhases = (
+				5F5E4D2A28F2BE6E9F5633CE /* [CP] Check Pods Manifest.lock */,
 				8E27B2F71F677CA900B6F5D5 /* Sources */,
 				8E27B2F81F677CA900B6F5D5 /* Frameworks */,
 				8E27B2F91F677CA900B6F5D5 /* Resources */,
+				282762AD4B1A0A5AC3037886 /* [CP] Embed Pods Frameworks */,
+				3FECDC96A423E0D509F83E8C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -160,6 +190,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E7C5B331F69333600CBABEA /* Test.html in Resources */,
 				8E27B30E1F677CA900B6F5D5 /* LaunchScreen.storyboard in Resources */,
 				8E27B30B1F677CA900B6F5D5 /* Assets.xcassets in Resources */,
 				8E27B3091F677CA900B6F5D5 /* Main.storyboard in Resources */,
@@ -167,6 +198,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		282762AD4B1A0A5AC3037886 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HYWebViewDemo/Pods-HYWebViewDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3FECDC96A423E0D509F83E8C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HYWebViewDemo/Pods-HYWebViewDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5F5E4D2A28F2BE6E9F5633CE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8E27B2F71F677CA900B6F5D5 /* Sources */ = {
@@ -298,6 +377,7 @@
 		};
 		8E27B3131F677CA900B6F5D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DECD9E230C8E80AB154D3F5E /* Pods-HYWebViewDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = HYWebViewDemo/Info.plist;
@@ -309,6 +389,7 @@
 		};
 		8E27B3141F677CA900B6F5D5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 05A70A109A550FEDFBCC0018 /* Pods-HYWebViewDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = HYWebViewDemo/Info.plist;
@@ -337,6 +418,7 @@
 				8E27B3141F677CA900B6F5D5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

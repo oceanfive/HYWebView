@@ -6,11 +6,50 @@
 //  Copyright © 2017年 ocean. All rights reserved.
 //
 
+/*
+ @discussion
+ 
+ js向oc调用方法/传递数据的方式：
+ 一、通过文档的位置发送新页面的请求document.location
+    1、js处理：document.location = url （document.location.href = url）
+    2、oc处理：拦截url请求，进行判断，并做相关的处理
+        2.1、对于UIWebView
+        - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+        2.2、对于WKWebView
+        - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+ 
+ 二、通过发送消息处理 window.webkit.messageHandlers.<name>.postMessage(<messageBody>)
+    1、js处理：window.webkit.messageHandlers.<name>.postMessage(<messageBody>)
+        name：方法的名称
+        messageBody：传递的数据
+    2、oc处理：
+        2.1、对于UIWebView - ✘ 不能够使用
+        2.2、对于WKWebView - 可以使用
+            2.2.1、给WKWebView配置WKWebViewConfiguration属性的WKUserContentController中调用方法
+            - (void)addScriptMessageHandler:(id <WKScriptMessageHandler>)scriptMessageHandler name:(NSString *)name;
+            2.2.2、实现代理WKScriptMessageHandler的代理方法
+            - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message;
+ 
+ 
+ oc调用js方法
+ 一、使用应封装好的方法：
+    1、对于UIWebView
+        - (nullable NSString *)stringByEvaluatingJavaScriptFromString:(NSString *)script;
+    2、对于WKWebView
+        - (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^ _Nullable)(_Nullable id, NSError * _Nullable error))completionHandler;
+ 二、使用JavaScriptCore框架
+ 
+ 
+ oc和js的交互方法还可以使用第三方框架 WebViewJavascriptBridge
+ 
+ */
+
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class HYWebView;
+@class WKWebViewConfiguration;
 
 @protocol HYWebViewDelegate <NSObject>
 
@@ -41,6 +80,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)webView:(HYWebView *)webView didUpdateProgress:(CGFloat)progress;
 
+/**
+ js调用oc方法
+
+ @param webView HYWebView
+ @param message js传递过来的消息内容
+ @param name js调用的方法名称
+ @param url 当前页面的url
+ 
+ @discussion
+ 此代理方法针对初始化方法 - (instancetype)initWithFrame:(CGRect)frame scriptMessageHandlerNames:(NSArray *)names; 使用
+ 
+ */
+- (void)webView:(HYWebView *)webView didReceiveScriptMessage:(id)message name:(NSString *)name url:(NSURL *)url;
+
 @end
 
 @interface HYWebView : UIView
@@ -50,6 +103,28 @@ NS_ASSUME_NONNULL_BEGIN
  初始化方法
  */
 - (instancetype)initWithFrame:(CGRect)frame;
+
+/**
+ 初始化方法，通过js调用oc的方法名称
+
+ @param frame frame
+ @param names js调用oc的方法名称数组
+ @return HYWebView
+ 
+ @discussion
+ 此方法用于8.0之后使用
+ 
+ */
+- (instancetype)initWithFrame:(CGRect)frame scriptMessageHandlerNames:(NSArray<NSString *> *)names NS_AVAILABLE_IOS(8_0);
+
+/**
+ 当使用WKWebView即8.0之后可以使用的方法
+
+ @param frame frame
+ @param configuration 配置信息
+ @return HYWebView
+ */
+- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration NS_AVAILABLE_IOS(8_0);
 
 /**
  代理
@@ -101,6 +176,36 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)goForward;
 - (void)reload;
 - (void)stopLoading;
+
+/**
+ 历史记录
+ */
+@property (nonatomic, readonly, assign) NSUInteger backForwardCount;
+
+/**
+ 以当前位置为准，后退index个位置，超过范围backForwardCount无效
+ */
+- (void)goBack:(NSUInteger)index;
+
+/**
+ 以当前位置为准，前进index个位置，超过范围backForwardCount无效
+ */
+- (void)goForward:(NSUInteger)index;
+
+#pragma mark - TODO
+- (void)reloadFromOrigin;
+
+#pragma mark - oc调用js方法
+/**
+ 和js交互方法
+
+ @param javaScriptString js语句
+ @param completionHandler 回调block
+ result: 返回结果
+ error: 错误信息
+ 
+ */
+- (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^ _Nullable)(id _Nullable result, NSError * _Nullable error))completionHandler;
 
 @end
 
