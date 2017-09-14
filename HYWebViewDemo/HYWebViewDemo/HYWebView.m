@@ -290,8 +290,7 @@
         }
 //        if (self.jsContext) {
 //            JSValue *value = [self.jsContext evaluateScript:javaScriptString];
-//            
-//            NSLog(@"%@", value);
+//
 //        } else {
 //            
 //        }
@@ -331,10 +330,6 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didUpdateProgress:)]) {
         [self.delegate webView:self didUpdateProgress:progress];
     }
-//    if (self.isLoading) {
-//        self.progress = 1.0;
-//        [self resetProgressView];
-//    }
     self.progress = progress;
 }
 
@@ -466,17 +461,11 @@
 }
 
 - (void)setProgress:(float)progress{
-    if (progress > 1.0) {
-        progress = 1.0;
-    }
-    if (progress < 0.0) {
-        progress = 0.0;
-    }
+    if (progress > 1.0) progress = 1.0;
+    if (progress < 0.0) progress = 0.0;
     //"增加"的进度才有动画效果，"减少"的进度会从新加载，比如一个页面还没有加载完成又重新打开了一个网页
     BOOL animated = progress > _progress;
-    if (!animated) {
-        progress = 0.0;
-    }
+    if (!animated) progress = 0.0;
     _progress = progress;
     [self.progressView setProgress:progress animated:animated];
 }

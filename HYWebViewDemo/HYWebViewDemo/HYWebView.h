@@ -185,6 +185,7 @@ typedef NS_ENUM(NSUInteger, HYWebViewProgressPosition) {
 - (void)goBack;
 - (void)goForward;
 - (void)reload;
+//- (void)reloadFromOrigin;
 - (void)stopLoading;
 
 /**
@@ -202,9 +203,6 @@ typedef NS_ENUM(NSUInteger, HYWebViewProgressPosition) {
  */
 - (void)goForward:(NSUInteger)index;
 
-#pragma mark - TODO
-- (void)reloadFromOrigin;
-
 #pragma mark - oc调用js方法
 /**
  和js交互方法
@@ -220,27 +218,28 @@ typedef NS_ENUM(NSUInteger, HYWebViewProgressPosition) {
 #pragma mark - progress
 
 /**
- 是否显示进度条
+ 是否显示进度条，默认为YES
  */
 @property (nonatomic, assign) BOOL isShowProgressView;
 
 /**
- 进度条位置
+ 进度条位置，默认为HYWebViewProgressPositionNavigationBarBottomIn
  */
 @property (nonatomic, assign) HYWebViewProgressPosition progressPosition;
 
 /**
- 进度，0.0-1.0
+ 进度，0.0-1.0，默认为0.0
  */
 @property (nonatomic, assign) float progress;
 
 /**
- 进度颜色（已完成）
+ 进度颜色（已完成），默认为
+ [UIColor colorWithRed:22.f / 255.f green:126.f / 255.f blue:251.f / 255.f alpha:1.0]
  */
 @property (nonatomic, strong) UIColor *progressColor;
 
 /**
- 轨道颜色(未完成)
+ 轨道颜色 (未完成)，默认为[UIColor clearColor]
  */
 @property (nonatomic, strong) UIColor *trackColor;
 
