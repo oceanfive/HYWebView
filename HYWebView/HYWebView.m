@@ -9,6 +9,7 @@
 #import "HYWebView.h"
 #import <WebKit/WebKit.h>
 #import <WebKit/WKWebView.h>
+#import <JavaScriptCore/JavaScriptCore.h>
 
 #define kKVOPropertyTitle @"title"
 #define kKVOPropertyURL @"URL"
@@ -22,12 +23,16 @@
 
 @property (nonatomic, strong) UIWebView *uiWebView;
 
+@property (nonatomic, strong) JSContext *jsContext;
+@property (nonatomic, strong) NSArray *messageNames;
+
 @end
 
 @implementation HYWebView
 
 #pragma mark - helper
 - (BOOL)isiOS8Later{
+    return NO;
     return NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_8_0;
 }
 
@@ -43,23 +48,51 @@
 - (instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        [self initWebViewWithFrame:frame];
+        if ([self isiOS8Later]) {
+            [self initWKWebViewWithFrame:frame configuration:self.wkWebViewConfiguration];
+        } else {
+            [self initUIWebViewWithFrame:frame];
+        }
     }
     return self;
 }
 
-- (void)initWebViewWithFrame:(CGRect)frame{
-    if ([self isiOS8Later]) {
-        [self initWKWebViewWithFrame:frame configuration:self.wkWebViewConfiguration];
-    } else {
-        [self initUIWebViewWithFrame:frame];
+- (instancetype)initWithFrame:(CGRect)frame scriptMessageHandlerNames:(NSArray<NSString *> *)names{
+    self = [super initWithFrame:frame];
+    if (self) {
+        if ([self isiOS8Later]) {
+            WKUserContentController *content = [[WKUserContentController alloc] init];
+            for (NSString *name in names) {
+                [content addScriptMessageHandler:self name:name];
+            }
+            WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+            configuration.userContentController = content;
+            [self initWKWebViewWithFrame:frame configuration:configuration];
+        } else {
+            self.messageNames = names;
+            [self initUIWebViewWithFrame:frame];
+        }
     }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration{
+    self = [super initWithFrame:frame];
+    if (self) {
+        if ([self isiOS8Later]) {
+            [self initWKWebViewWithFrame:frame configuration:configuration];
+        } else {
+            [self initUIWebViewWithFrame:frame];
+        }
+    }
+    return self;
 }
 
 - (void)initWKWebViewWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration{
     self.wkWebView = [[WKWebView alloc] initWithFrame:frame configuration:configuration];
     self.wkWebView.UIDelegate = self;
     self.wkWebView.navigationDelegate = self;
+    self.wkWebView.allowsBackForwardNavigationGestures = YES;
     [self initWKWebViewKVO];
     [self addSubview:self.wkWebView];
 }
@@ -172,6 +205,51 @@
     }
 }
 
+- (void)goBack:(NSUInteger)index{
+    NSString *js = [NSString stringWithFormat:@"history.go(-%ld)", index];
+    [self evaluateJavaScript:js completionHandler:^(id  _Nullable result, NSError * _Nullable error) {
+        
+    }];
+}
+
+- (void)goForward:(NSUInteger)index{
+    NSString *js = [NSString stringWithFormat:@"history.go(%ld)", index];
+    [self evaluateJavaScript:js completionHandler:^(id  _Nullable result, NSError * _Nullable error) {
+        
+    }];
+}
+
+- (void)handlerHistory{
+    if ([self isiOS8Later]) {
+        _backForwardCount = self.wkWebView.backForwardList.backList.count + self.wkWebView.backForwardList.forwardList.count + 1;
+    } else {
+        _backForwardCount = [[self.uiWebView stringByEvaluatingJavaScriptFromString:@"history.length"] integerValue];
+    }
+}
+
+#pragma mark - oc call js
+- (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^ _Nullable)(id _Nullable result, NSError * _Nullable error))completionHandler{
+    if ([self isiOS8Later]) {
+        [self.wkWebView evaluateJavaScript:javaScriptString completionHandler:^(id _Nullable res, NSError * _Nullable err) {
+            if (completionHandler) {
+                completionHandler(res, err);
+            }
+        }];
+    } else {
+        NSString *res = [self.uiWebView stringByEvaluatingJavaScriptFromString:javaScriptString];
+        if (completionHandler) {
+            completionHandler(res, nil);
+        }
+//        if (self.jsContext) {
+//            JSValue *value = [self.jsContext evaluateScript:javaScriptString];
+//            
+//            NSLog(@"%@", value);
+//        } else {
+//            
+//        }
+    }
+}
+
 #pragma mark - 代理回调
 - (BOOL)_shouldStartLoadWithRequest:(NSURLRequest *)request{
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:)]) {
@@ -190,6 +268,7 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
         [self.delegate webViewDidFinishLoad:self];
     }
+    [self handlerHistory];
 }
 
 - (void)_didFailLoadWithError:(NSError *)error{
@@ -253,7 +332,7 @@
 
 //其他:webView处理内容的发生中断的时候调用
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView{
-    NSError *error;
+    NSError *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey: @"webViewWebContentProcessDidTerminate"}];
     [self _didFailLoadWithError:error];
 }
 
@@ -262,11 +341,7 @@
 
 #pragma mark - UIWebViewDelegate
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
-    if ([self _shouldStartLoadWithRequest:request]) {
-        return YES;
-    } else {
-        return NO;
-    }
+    return [self _shouldStartLoadWithRequest:request];
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView{
@@ -278,6 +353,7 @@
     _loading = NO;
     _title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     _URL = webView.request.URL;
+    [self handlerJSCallOCWithWebView:webView];
     [self _didFinishLoad];
 }
 
@@ -286,5 +362,50 @@
     [self _didFailLoadWithError:error];
 }
 
+- (void)handlerJSCallOCWithWebView:(UIWebView *)webView{
+    self.jsContext = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+//    __weak typeof(self) wself = self;
+//    for (NSString *name in self.messageNames) {
+//        self.jsContext[name] = ^(id parameters) {
+//            JSContext *currentContext = [JSContext currentContext];
+//            JSValue *callee = [JSContext currentCallee];
+//            JSValue *this = [JSContext currentThis];
+//            NSArray *arguments = [JSContext currentArguments];
+//            JSValue *globalObject = wself.jsContext.globalObject;
+//            JSValue *exception = wself.jsContext.exception;
+//            
+//            if (wself.delegate && [wself respondsToSelector:@selector(webView:didReceiveScriptMessage:name:url:)]) {
+//
+//            }
+//        };
+//    }
+}
+
+#pragma mark - WKScriptMessageHandler
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didReceiveScriptMessage:name:url:)]) {
+        [self.delegate webView:self didReceiveScriptMessage:message.body name:message.name url:message.frameInfo.request.URL];
+    }
+}
+
+#pragma mark - dealloc
+- (void)dealloc{
+    if ([self isiOS8Later]) {
+        [self.wkWebView removeObserver:self forKeyPath:kKVOPropertyTitle];
+        [self.wkWebView removeObserver:self forKeyPath:kKVOPropertyLoading];
+        [self.wkWebView removeObserver:self forKeyPath:kKVOPropertyURL];
+        [self.wkWebView removeObserver:self forKeyPath:kKVOPropertyEstimatedProgress];
+        self.wkWebView.UIDelegate = nil;
+        self.wkWebView.navigationDelegate = nil;
+        [self.wkWebView stopLoading];
+        [self.wkWebView removeFromSuperview];
+        self.wkWebView = nil;
+    } else {
+        self.uiWebView.delegate = nil;
+        [self.uiWebView stopLoading];
+        [self.uiWebView removeFromSuperview];
+        self.uiWebView = nil;
+    }
+}
 
 @end
