@@ -173,6 +173,9 @@
     } else if ([keyPath isEqualToString:kKVOPropertyEstimatedProgress]) {
         _estimatedProgress = [(NSNumber *)newValue floatValue];
         [self _didUpdateProgress:_estimatedProgress];
+        /*
+         加载失败的情况下，_estimatedProgress的值也会为1.0
+         */
     }
 }
 
@@ -309,6 +312,10 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
         [self.delegate webViewDidStartLoad:self];
     }
+    //estimatedProgress属性值变化(先)和代理方法didCommitNavigation(后)不同步执行
+    if (![self isiOS8Later]) {
+        [self _didUpdateProgress:0.0];
+    }
 }
 
 - (void)_didFinishLoad{
@@ -316,14 +323,14 @@
         [self.delegate webViewDidFinishLoad:self];
     }
     [self handlerHistory];
-    self.progress = 1.0; //使加载到100%再消失
-    [self resetProgressView];
+    [self _didUpdateProgress:1.0];
 }
 
 - (void)_didFailLoadWithError:(NSError *)error{
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
         [self.delegate webView:self didFailLoadWithError:error];
     }
+    [self _didUpdateProgress:0.0];
 }
 
 - (void)_didUpdateProgress:(float)progress{
@@ -331,6 +338,9 @@
         [self.delegate webView:self didUpdateProgress:progress];
     }
     self.progress = progress;
+    if (self.progress >= 1.0) {
+        [self resetProgressView];
+    }
 }
 
 #pragma mark - WKNavigationDelegate
@@ -403,6 +413,10 @@
 - (void)webViewDidStartLoad:(UIWebView *)webView{
     _loading = YES;
     [self _didStartLoad];
+    //产生 10-50的随机数
+    int random = (int)(10 + (arc4random() % ((50 - 10 + 1))));
+    _estimatedProgress = random / 100.0f;
+    [self _didUpdateProgress:_estimatedProgress];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
@@ -464,7 +478,7 @@
     if (progress > 1.0) progress = 1.0;
     if (progress < 0.0) progress = 0.0;
     //"增加"的进度才有动画效果，"减少"的进度会从新加载，比如一个页面还没有加载完成又重新打开了一个网页
-    BOOL animated = progress > _progress;
+    BOOL animated = progress >= _progress;
     if (!animated) progress = 0.0;
     _progress = progress;
     [self.progressView setProgress:progress animated:animated];

@@ -14,14 +14,13 @@ static NSUInteger kBackTag = 300;
 static NSUInteger kForwardTag = 301;
 static NSUInteger kHistoryTag = 302;
 
-@interface SecondViewController ()<HYWebViewDelegate, WKScriptMessageHandler>
+@interface SecondViewController ()<HYWebViewDelegate>
 
 @property (nonatomic, strong) HYWebView *webView;
 
 @property (nonatomic, copy) NSString *urlString;
 
 @property (nonatomic, strong) WKWebViewConfiguration *wkWebViewConfiguration;
-
 
 @end
 
@@ -158,7 +157,6 @@ static NSUInteger kHistoryTag = 302;
      location.host 设置或返回主机名和当前 URL 的端口号
      */
     
-    __weak typeof(self) wself = self;
     
     if (button.tag == kBackTag) {
 
@@ -202,6 +200,7 @@ static NSUInteger kHistoryTag = 302;
 - (BOOL)webView:(HYWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request{
 
     NSString *url = request.URL.absoluteString;
+    NSLog(@"%@", url);
     
     return YES;
 }

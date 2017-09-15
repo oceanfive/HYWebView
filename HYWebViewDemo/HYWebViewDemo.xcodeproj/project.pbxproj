@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E115B591F6BB72B00989A1C /* HYWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E115B581F6BB72B00989A1C /* HYWebView.m */; };
 		8E27B3001F677CA900B6F5D5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B2FF1F677CA900B6F5D5 /* main.m */; };
 		8E27B3031F677CA900B6F5D5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B3021F677CA900B6F5D5 /* AppDelegate.m */; };
 		8E27B3061F677CA900B6F5D5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B3051F677CA900B6F5D5 /* ViewController.m */; };
 		8E27B3091F677CA900B6F5D5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E27B3071F677CA900B6F5D5 /* Main.storyboard */; };
 		8E27B30B1F677CA900B6F5D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E27B30A1F677CA900B6F5D5 /* Assets.xcassets */; };
 		8E27B30E1F677CA900B6F5D5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E27B30C1F677CA900B6F5D5 /* LaunchScreen.storyboard */; };
-		8E27B3181F677EBD00B6F5D5 /* HYWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B3171F677EBD00B6F5D5 /* HYWebView.m */; };
 		8E27B31B1F67A61300B6F5D5 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B31A1F67A61300B6F5D5 /* SecondViewController.m */; };
 		8E27B31E1F67A62900B6F5D5 /* OneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E27B31D1F67A62900B6F5D5 /* OneViewController.m */; };
 		8E7C5B331F69333600CBABEA /* Test.html in Resources */ = {isa = PBXBuildFile; fileRef = 8E7C5B321F69333600CBABEA /* Test.html */; };
@@ -23,6 +23,8 @@
 /* Begin PBXFileReference section */
 		05A70A109A550FEDFBCC0018 /* Pods-HYWebViewDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HYWebViewDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-HYWebViewDemo/Pods-HYWebViewDemo.release.xcconfig"; sourceTree = "<group>"; };
 		68C3EF42855A010537EFAB6F /* libPods-HYWebViewDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HYWebViewDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E115B571F6BB72B00989A1C /* HYWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYWebView.h; sourceTree = "<group>"; };
+		8E115B581F6BB72B00989A1C /* HYWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYWebView.m; sourceTree = "<group>"; };
 		8E27B2FB1F677CA900B6F5D5 /* HYWebViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HYWebViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E27B2FF1F677CA900B6F5D5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8E27B3011F677CA900B6F5D5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -33,8 +35,6 @@
 		8E27B30A1F677CA900B6F5D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8E27B30D1F677CA900B6F5D5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8E27B30F1F677CA900B6F5D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8E27B3161F677EBD00B6F5D5 /* HYWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYWebView.h; sourceTree = "<group>"; };
-		8E27B3171F677EBD00B6F5D5 /* HYWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYWebView.m; sourceTree = "<group>"; };
 		8E27B3191F67A61300B6F5D5 /* SecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
 		8E27B31A1F67A61300B6F5D5 /* SecondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
 		8E27B31C1F67A62900B6F5D5 /* OneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneViewController.h; sourceTree = "<group>"; };
@@ -55,6 +55,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8E115B561F6BB72B00989A1C /* HYWebView */ = {
+			isa = PBXGroup;
+			children = (
+				8E115B571F6BB72B00989A1C /* HYWebView.h */,
+				8E115B581F6BB72B00989A1C /* HYWebView.m */,
+			);
+			path = HYWebView;
+			sourceTree = "<group>";
+		};
 		8E27B2F21F677CA900B6F5D5 = {
 			isa = PBXGroup;
 			children = (
@@ -76,7 +85,7 @@
 		8E27B2FD1F677CA900B6F5D5 /* HYWebViewDemo */ = {
 			isa = PBXGroup;
 			children = (
-				8E27B3151F677EA800B6F5D5 /* HYWebView */,
+				8E115B561F6BB72B00989A1C /* HYWebView */,
 				8E27B3011F677CA900B6F5D5 /* AppDelegate.h */,
 				8E27B3021F677CA900B6F5D5 /* AppDelegate.m */,
 				8E27B3041F677CA900B6F5D5 /* ViewController.h */,
@@ -101,15 +110,6 @@
 				8E27B2FF1F677CA900B6F5D5 /* main.m */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		8E27B3151F677EA800B6F5D5 /* HYWebView */ = {
-			isa = PBXGroup;
-			children = (
-				8E27B3161F677EBD00B6F5D5 /* HYWebView.h */,
-				8E27B3171F677EBD00B6F5D5 /* HYWebView.m */,
-			);
-			name = HYWebView;
 			sourceTree = "<group>";
 		};
 		C2BD7CB9B03DFD69750CC504 /* Pods */ = {
@@ -163,6 +163,7 @@
 				TargetAttributes = {
 					8E27B2FA1F677CA900B6F5D5 = {
 						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = D94N38GZR8;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -253,10 +254,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E27B31B1F67A61300B6F5D5 /* SecondViewController.m in Sources */,
-				8E27B3181F677EBD00B6F5D5 /* HYWebView.m in Sources */,
 				8E27B3061F677CA900B6F5D5 /* ViewController.m in Sources */,
 				8E27B31E1F67A62900B6F5D5 /* OneViewController.m in Sources */,
 				8E27B3031F677CA900B6F5D5 /* AppDelegate.m in Sources */,
+				8E115B591F6BB72B00989A1C /* HYWebView.m in Sources */,
 				8E27B3001F677CA900B6F5D5 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -380,6 +381,7 @@
 			baseConfigurationReference = DECD9E230C8E80AB154D3F5E /* Pods-HYWebViewDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = D94N38GZR8;
 				INFOPLIST_FILE = HYWebViewDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ocean.HYWebViewDemo;
@@ -392,6 +394,7 @@
 			baseConfigurationReference = 05A70A109A550FEDFBCC0018 /* Pods-HYWebViewDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = D94N38GZR8;
 				INFOPLIST_FILE = HYWebViewDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ocean.HYWebViewDemo;
