@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "HYWebView"
-  s.version      = "0.1.1"
+  s.version      = "0.1.2"
   s.summary      = "HYWebView"
 
   # This description is used to generate tags and improve search results.
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
-  					适配不同的系统，iOS7之前使用UIWebView，iOS7之后使用WKWebView
+  					适配不同的系统，iOS7之前使用UIWebView，iOS7之后使用WKWebView，适配了iPhone X
                    DESC
 
   s.homepage     = "https://github.com/oceanfive/HYWebView"
