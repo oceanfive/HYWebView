@@ -16,6 +16,17 @@
 #define kKVOPropertyLoading @"loading"
 #define kKVOPropertyEstimatedProgress @"estimatedProgress"
 
+#define kStatusBarHeight 20.0
+#define kNavigationBarHeight 44.0
+#define kTabBarHeight 49.0
+
+#define is_iPhoneX CGSizeEqualToSize(CGSizeMake(375, 812), [[UIScreen mainScreen] bounds].size)
+#define iPhoneXTabBarAddHeight 34
+#define iPhoneXStatusBarAddHeight 24
+#define kSafeStatusBarHeight (is_iPhoneX ? (kStatusBarHeight + iPhoneXStatusBarAddHeight) : kStatusBarHeight)
+#define kSafeTabBarHeight (is_iPhoneX ? (kTabBarHeight + iPhoneXTabBarAddHeight) : kTabBarHeight)
+#define kSafeNavigationBarHeight kNavigationBarHeight
+
 @interface HYWebView ()<UIWebViewDelegate, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler>
 
 @property (nonatomic, strong) WKWebView *wkWebView;
@@ -34,7 +45,7 @@
 @implementation HYWebView
 
 #pragma mark - helper
-- (BOOL)isiOS8Later{
+- (BOOL)isiOS8Later {
     return NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_8_0;
 }
 
@@ -49,7 +60,7 @@
 }
 
 #pragma mark - lazy
-- (WKWebViewConfiguration *)wkWebViewConfiguration{
+- (WKWebViewConfiguration *)wkWebViewConfiguration {
     if (!_wkWebViewConfiguration) {
         _wkWebViewConfiguration = [[WKWebViewConfiguration alloc] init];
     }
@@ -57,7 +68,7 @@
 }
 
 #pragma mark - init
-- (instancetype)initWithFrame:(CGRect)frame{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         if ([self isiOS8Later]) {
@@ -69,7 +80,7 @@
     return self;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame scriptMessageHandlerNames:(NSArray<NSString *> *)names{
+- (instancetype)initWithFrame:(CGRect)frame scriptMessageHandlerNames:(NSArray<NSString *> *)names {
     self = [super initWithFrame:frame];
     if (self) {
         if ([self isiOS8Later]) {
@@ -88,7 +99,7 @@
     return self;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration{
+- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
     self = [super initWithFrame:frame];
     if (self) {
         if ([self isiOS8Later]) {
@@ -100,7 +111,7 @@
     return self;
 }
 
-- (void)initWKWebViewWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration{
+- (void)initWKWebViewWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
     self.wkWebView = [[WKWebView alloc] initWithFrame:frame configuration:configuration];
     self.wkWebView.UIDelegate = self;
     self.wkWebView.navigationDelegate = self;
@@ -110,7 +121,7 @@
     [self initProgressView];
 }
 
-- (void)initUIWebViewWithFrame:(CGRect)frame{
+- (void)initUIWebViewWithFrame:(CGRect)frame {
     self.uiWebView = [[UIWebView alloc] initWithFrame:frame];
     self.uiWebView.delegate = self;
     self.uiWebView.scalesPageToFit = YES;
@@ -120,7 +131,7 @@
     [self initProgressView];
 }
 
-- (void)initProgressView{
+- (void)initProgressView {
     [self initProgressViewSetup];
     self.isShowProgressView = YES;
     self.progressPosition = HYWebViewProgressPositionNavigationBarBottomIn;
@@ -130,7 +141,7 @@
     self.trackColor = [UIColor clearColor];
 }
 
-- (void)initProgressViewSetup{
+- (void)initProgressViewSetup {
     self.progressView = [[UIProgressView alloc] init];
     self.progressView.backgroundColor = [UIColor clearColor];
     UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
@@ -138,7 +149,7 @@
     [keyWindow bringSubviewToFront:self.progressView];
 }
 
-- (void)resetProgressView{
+- (void)resetProgressView {
     if (self.progressView) {
         [self.progressView removeFromSuperview];
         self.progress = 0.0;
@@ -148,21 +159,21 @@
     [self setNeedsLayout]; //旧的已被销毁，新的需要重新布局
 }
 
-- (void)resetProgressViewProperty{
+- (void)resetProgressViewProperty {
     self.progressView.progress = self.progress;
     self.progressView.progressTintColor = self.progressColor;
     self.progressView.trackTintColor = self.trackColor;
 }
 
 #pragma mark - KVO
-- (void)initWKWebViewKVO{
+- (void)initWKWebViewKVO {
     [self.wkWebView addObserver:self forKeyPath:kKVOPropertyTitle options:NSKeyValueObservingOptionNew context:nil];
     [self.wkWebView addObserver:self forKeyPath:kKVOPropertyLoading options:NSKeyValueObservingOptionNew context:nil];
     [self.wkWebView addObserver:self forKeyPath:kKVOPropertyURL options:NSKeyValueObservingOptionNew context:nil];
     [self.wkWebView addObserver:self forKeyPath:kKVOPropertyEstimatedProgress options:NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     id newValue = [change objectForKey:NSKeyValueChangeNewKey];
     if ([keyPath isEqualToString:kKVOPropertyTitle]) {
         _title = (NSString *)newValue;
@@ -180,7 +191,7 @@
 }
 
 #pragma mark - load
-- (void)loadRequest:(NSURLRequest *)request{
+- (void)loadRequest:(NSURLRequest *)request {
     if ([self isiOS8Later]) {
         [self.wkWebView loadRequest:request];
     } else {
@@ -188,7 +199,7 @@
     }
 }
 
-- (void)loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL{
+- (void)loadHTMLString:(NSString *)string baseURL:(NSURL *)baseURL {
     if ([self isiOS8Later]) {
         [self.wkWebView loadHTMLString:string baseURL:baseURL];
     } else {
@@ -197,7 +208,7 @@
 }
 
 #pragma mark - getter
-- (UIScrollView *)scrollView{
+- (UIScrollView *)scrollView {
     if ([self isiOS8Later]) {
         return self.wkWebView.scrollView;
     } else {
@@ -208,7 +219,7 @@
 #pragma mark - setter
 
 #pragma mark - 操作
-- (BOOL)canGoBack{
+- (BOOL)canGoBack {
     if ([self isiOS8Later]) {
         return [self.wkWebView canGoBack];
     } else {
@@ -216,7 +227,7 @@
     }
 }
 
-- (BOOL)canGoForward{
+- (BOOL)canGoForward {
     if ([self isiOS8Later]) {
         return [self.wkWebView canGoForward];
     } else {
@@ -224,7 +235,7 @@
     }
 }
 
-- (void)goBack{
+- (void)goBack {
     if ([self isiOS8Later]) {
         [self.wkWebView goBack];
     } else {
@@ -232,7 +243,7 @@
     }
 }
 
-- (void)goForward{
+- (void)goForward {
     if ([self isiOS8Later]) {
         [self.wkWebView goForward];
     } else {
@@ -240,7 +251,7 @@
     }
 }
 
-- (void)reload{
+- (void)reload {
     if ([self isiOS8Later]) {
         [self.wkWebView reload];
     } else {
@@ -248,7 +259,7 @@
     }
 }
 
-- (void)stopLoading{
+- (void)stopLoading {
     if ([self isiOS8Later]) {
         [self.wkWebView stopLoading];
     } else {
@@ -256,21 +267,21 @@
     }
 }
 
-- (void)goBack:(NSUInteger)index{
+- (void)goBack:(NSUInteger)index {
     NSString *js = [NSString stringWithFormat:@"history.go(-%ld)", index];
     [self evaluateJavaScript:js completionHandler:^(id  _Nullable result, NSError * _Nullable error) {
         
     }];
 }
 
-- (void)goForward:(NSUInteger)index{
+- (void)goForward:(NSUInteger)index {
     NSString *js = [NSString stringWithFormat:@"history.go(%ld)", index];
     [self evaluateJavaScript:js completionHandler:^(id  _Nullable result, NSError * _Nullable error) {
         
     }];
 }
 
-- (void)handlerHistory{
+- (void)handlerHistory {
     if ([self isiOS8Later]) {
         _backForwardCount = self.wkWebView.backForwardList.backList.count + self.wkWebView.backForwardList.forwardList.count + 1;
     } else {
@@ -301,14 +312,14 @@
 }
 
 #pragma mark - 代理回调
-- (BOOL)_shouldStartLoadWithRequest:(NSURLRequest *)request{
+- (BOOL)_shouldStartLoadWithRequest:(NSURLRequest *)request {
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:)]) {
         return [self.delegate webView:self shouldStartLoadWithRequest:request];
     }
     return YES;
 }
 
-- (void)_didStartLoad{
+- (void)_didStartLoad {
     if (self.delegate && [self.delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
         [self.delegate webViewDidStartLoad:self];
     }
@@ -318,7 +329,7 @@
     }
 }
 
-- (void)_didFinishLoad{
+- (void)_didFinishLoad {
     if (self.delegate && [self.delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
         [self.delegate webViewDidFinishLoad:self];
     }
@@ -326,14 +337,14 @@
     [self _didUpdateProgress:1.0];
 }
 
-- (void)_didFailLoadWithError:(NSError *)error{
+- (void)_didFailLoadWithError:(NSError *)error {
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
         [self.delegate webView:self didFailLoadWithError:error];
     }
     [self _didUpdateProgress:0.0];
 }
 
-- (void)_didUpdateProgress:(float)progress{
+- (void)_didUpdateProgress:(float)progress {
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didUpdateProgress:)]) {
         [self.delegate webView:self didUpdateProgress:progress];
     }
@@ -345,7 +356,7 @@
 
 #pragma mark - WKNavigationDelegate
 //1、请求发送之前，决定是否发送请求
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     if ([self _shouldStartLoadWithRequest:navigationAction.request]) {
         decisionHandler(WKNavigationActionPolicyAllow);
     } else {
@@ -354,37 +365,37 @@
 }
 
 //2、开始发送请求 （当targetFrame是isMainFrame的时候才会调用???，页面内点击跳转是不会走这个方法的）
-- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation{
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     
 }
 
 //3、请求成功；请求获得响应之后，确定是否加载页面(请求成功)
-- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler{
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
     decisionHandler(WKNavigationResponsePolicyAllow);
 }
 
 //3、请求失败（WKNavigationResponsePolicyCancel的时候也会调用，相当于请求失败了）
-- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error{
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     [self _didFailLoadWithError:error];
 }
 
 //4、开始加载页面（WKNavigationResponsePolicyAllow的时候调用）
-- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation{
+- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation {
     [self _didStartLoad];
 }
 
 //5、页面加载完成（成功的时候调用）
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     [self _didFinishLoad];
 }
 
 //5、页面加载失败（失败的时候调用）
-- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)errorP{
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)errorP {
     [self _didFailLoadWithError:errorP];
 }
 
 //其他:重定向访问url
-- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation{
+- (void)webView:(WKWebView *)webView didReceiveServerRedirectForProvisionalNavigation:(WKNavigation *)navigation {
     NSLog(@"%s",__FUNCTION__);
     
 }
@@ -397,7 +408,7 @@
 //}
 
 //其他:webView处理内容的发生中断的时候调用
-- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView{
+- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView {
     NSError *error = [[NSError alloc] initWithDomain:NSCocoaErrorDomain code:-1 userInfo:@{NSLocalizedDescriptionKey: @"webViewWebContentProcessDidTerminate"}];
     [self _didFailLoadWithError:error];
 }
@@ -406,11 +417,11 @@
 
 
 #pragma mark - UIWebViewDelegate
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     return [self _shouldStartLoadWithRequest:request];
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView{
+- (void)webViewDidStartLoad:(UIWebView *)webView {
     _loading = YES;
     [self _didStartLoad];
     //产生 10-50的随机数
@@ -419,7 +430,7 @@
     [self _didUpdateProgress:_estimatedProgress];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView{
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
     _loading = NO;
     _title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     _URL = webView.request.URL;
@@ -427,12 +438,12 @@
     [self _didFinishLoad];
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     _loading = NO;
     [self _didFailLoadWithError:error];
 }
 
-- (void)handlerJSCallOCWithWebView:(UIWebView *)webView{
+- (void)handlerJSCallOCWithWebView:(UIWebView *)webView {
     self.jsContext = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
 //    __weak typeof(self) wself = self;
 //    for (NSString *name in self.messageNames) {
@@ -452,29 +463,29 @@
 }
 
 #pragma mark - WKScriptMessageHandler
-- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didReceiveScriptMessage:name:url:)]) {
         [self.delegate webView:self didReceiveScriptMessage:message.body name:message.name url:message.frameInfo.request.URL];
     }
 }
 
 #pragma mark - progress
-- (void)setIsShowProgressView:(BOOL)isShowProgressView{
+- (void)setIsShowProgressView:(BOOL)isShowProgressView {
     _isShowProgressView = isShowProgressView;
     [self setNeedsLayout];
 }
 
-- (void)setProgressPosition:(HYWebViewProgressPosition)progressPosition{
+- (void)setProgressPosition:(HYWebViewProgressPosition)progressPosition {
     _progressPosition = progressPosition;
     [self setNeedsLayout];
 }
 
-- (void)setProgressHeight:(float)progressHeight{
+- (void)setProgressHeight:(float)progressHeight {
     _progressHeight = progressHeight;
     [self setNeedsLayout];
 }
 
-- (void)setProgress:(float)progress{
+- (void)setProgress:(float)progress {
     if (progress > 1.0) progress = 1.0;
     if (progress < 0.0) progress = 0.0;
     //"增加"的进度才有动画效果，"减少"的进度会从新加载，比如一个页面还没有加载完成又重新打开了一个网页
@@ -484,37 +495,38 @@
     [self.progressView setProgress:progress animated:animated];
 }
 
-- (void)setProgressColor:(UIColor *)progressColor{
+- (void)setProgressColor:(UIColor *)progressColor {
     _progressColor = progressColor;
     self.progressView.progressTintColor = progressColor;
 }
 
-- (void)setTrackColor:(UIColor *)trackColor{
+- (void)setTrackColor:(UIColor *)trackColor {
     _trackColor = trackColor;
     self.progressView.trackTintColor = trackColor;
 }
 
 #pragma mark - layout
-- (void)layoutSubviews{
+- (void)layoutSubviews {
     [super layoutSubviews];
     if (self.isShowProgressView) {
+        CGFloat statusAndNavigationBarHeight = kSafeStatusBarHeight + kSafeNavigationBarHeight;
         CGFloat width = [UIScreen mainScreen].bounds.size.width;
-        CGRect frame = CGRectMake(0, 64, width, self.progressHeight);
+        CGRect frame = CGRectMake(0, statusAndNavigationBarHeight, width, self.progressHeight);
         switch (self.progressPosition) {
             case HYWebViewProgressPositionNavigationBarBottomIn: {
-                frame = CGRectMake(0, 64 - 2, width, self.progressHeight);
+                frame = CGRectMake(0, statusAndNavigationBarHeight - 2, width, self.progressHeight);
             }   break;
                 
             case HYWebViewProgressPositionNavigationBarBottomOut: {
-                frame = CGRectMake(0, 64, width, self.progressHeight);
+                frame = CGRectMake(0, statusAndNavigationBarHeight, width, self.progressHeight);
             }   break;
                 
             case HYWebViewProgressPositionStatusBarTop: {
-                frame = CGRectMake(0, 0, width, self.progressHeight);
+                frame = CGRectMake(0, is_iPhoneX ? iPhoneXStatusBarAddHeight : 0, width, self.progressHeight);
             }   break;
                 
             case HYWebViewProgressPositionStatusBarBottom: {
-                frame = CGRectMake(0, 20, width, self.progressHeight);
+                frame = CGRectMake(0, kSafeStatusBarHeight, width, self.progressHeight);
             }   break;
                 
             default:
