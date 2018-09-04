@@ -177,6 +177,7 @@
     id newValue = [change objectForKey:NSKeyValueChangeNewKey];
     if ([keyPath isEqualToString:kKVOPropertyTitle]) {
         _title = (NSString *)newValue;
+        [self _titleDidChanged];
     } else if ([keyPath isEqualToString:kKVOPropertyLoading]) {
         _loading = [(NSNumber *)newValue boolValue];
     } else if ([keyPath isEqualToString:kKVOPropertyURL]) {
@@ -302,16 +303,23 @@
         if (completionHandler) {
             completionHandler(res, nil);
         }
-//        if (self.jsContext) {
-//            JSValue *value = [self.jsContext evaluateScript:javaScriptString];
-//
-//        } else {
-//            
-//        }
+        //        if (self.jsContext) {
+        //            JSValue *value = [self.jsContext evaluateScript:javaScriptString];
+        //
+        //        } else {
+        //
+        //        }
     }
 }
 
 #pragma mark - 代理回调
+
+- (void)_titleDidChanged {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webView:titleDidChanged:)]) {
+        [self.delegate webView:self titleDidChanged:_title];
+    }
+}
+
 - (BOOL)_shouldStartLoadWithRequest:(NSURLRequest *)request {
     if (self.delegate && [self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:)]) {
         return [self.delegate webView:self shouldStartLoadWithRequest:request];
@@ -350,7 +358,9 @@
     }
     self.progress = progress;
     if (self.progress >= 1.0) {
-        [self resetProgressView];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self resetProgressView];
+        });
     }
 }
 
@@ -445,21 +455,21 @@
 
 - (void)handlerJSCallOCWithWebView:(UIWebView *)webView {
     self.jsContext = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
-//    __weak typeof(self) wself = self;
-//    for (NSString *name in self.messageNames) {
-//        self.jsContext[name] = ^(id parameters) {
-//            JSContext *currentContext = [JSContext currentContext];
-//            JSValue *callee = [JSContext currentCallee];
-//            JSValue *this = [JSContext currentThis];
-//            NSArray *arguments = [JSContext currentArguments];
-//            JSValue *globalObject = wself.jsContext.globalObject;
-//            JSValue *exception = wself.jsContext.exception;
-//            
-//            if (wself.delegate && [wself respondsToSelector:@selector(webView:didReceiveScriptMessage:name:url:)]) {
-//
-//            }
-//        };
-//    }
+    //    __weak typeof(self) wself = self;
+    //    for (NSString *name in self.messageNames) {
+    //        self.jsContext[name] = ^(id parameters) {
+    //            JSContext *currentContext = [JSContext currentContext];
+    //            JSValue *callee = [JSContext currentCallee];
+    //            JSValue *this = [JSContext currentThis];
+    //            NSArray *arguments = [JSContext currentArguments];
+    //            JSValue *globalObject = wself.jsContext.globalObject;
+    //            JSValue *exception = wself.jsContext.exception;
+    //
+    //            if (wself.delegate && [wself respondsToSelector:@selector(webView:didReceiveScriptMessage:name:url:)]) {
+    //
+    //            }
+    //        };
+    //    }
 }
 
 #pragma mark - WKScriptMessageHandler
@@ -510,6 +520,11 @@
     [super layoutSubviews];
     if (self.isShowProgressView) {
         CGFloat statusAndNavigationBarHeight = kSafeStatusBarHeight + kSafeNavigationBarHeight;
+        UIViewController *vc = [self findVC];
+        if (vc) {
+            CGRect frame = vc.navigationController.navigationBar.frame;
+            statusAndNavigationBarHeight = frame.origin.y + frame.size.height;
+        }
         CGFloat width = [UIScreen mainScreen].bounds.size.width;
         CGRect frame = CGRectMake(0, statusAndNavigationBarHeight, width, self.progressHeight);
         switch (self.progressPosition) {

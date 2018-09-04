@@ -94,6 +94,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)webView:(HYWebView *)webView didReceiveScriptMessage:(id)message name:(NSString *)name url:(NSURL *)url;
 
+/**
+ 页面标题发生了变化
+ */
+- (void)webView:(HYWebView *)webView titleDidChanged:(NSString *)title;
+
 @end
 
 /**
