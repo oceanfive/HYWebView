@@ -63,6 +63,7 @@
 - (WKWebViewConfiguration *)wkWebViewConfiguration {
     if (!_wkWebViewConfiguration) {
         _wkWebViewConfiguration = [[WKWebViewConfiguration alloc] init];
+        _wkWebViewConfiguration.allowsInlineMediaPlayback = YES;
     }
     return _wkWebViewConfiguration;
 }

@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 
 
   s.name         = "HYWebView"
-  s.version      = "0.2.0"
+  s.version      = "0.2.1"
   s.summary      = "HYWebView"
   s.description  = <<-DESC
   					适配不同的系统，iOS7之前使用UIWebView，iOS7之后使用WKWebView，适配了iPhone X
