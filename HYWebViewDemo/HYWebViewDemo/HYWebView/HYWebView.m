@@ -64,6 +64,15 @@
     if (!_wkWebViewConfiguration) {
         _wkWebViewConfiguration = [[WKWebViewConfiguration alloc] init];
         _wkWebViewConfiguration.allowsInlineMediaPlayback = YES;
+        if (@available(iOS 10.0, *)) {
+            _wkWebViewConfiguration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
+        } else if (@available(iOS 9.0, *)) {
+            _wkWebViewConfiguration.requiresUserActionForMediaPlayback = NO;
+        } else if (@available(iOS 8.0, *)) {
+            _wkWebViewConfiguration.mediaPlaybackRequiresUserAction = NO;
+        } else {
+            // Fallback on earlier versions
+        }
     }
     return _wkWebViewConfiguration;
 }
@@ -128,6 +137,8 @@
     self.uiWebView.scalesPageToFit = YES;
     self.uiWebView.autoresizesSubviews = YES;
     self.uiWebView.opaque = NO;
+    self.uiWebView.mediaPlaybackRequiresUserAction = NO;
+    self.uiWebView.allowsInlineMediaPlayback = YES;
     [self addSubview:self.uiWebView];
     [self initProgressView];
 }
