@@ -565,6 +565,12 @@
             [self.progressView removeFromSuperview];
         }
     }
+    // 兼容约束布局
+    if ([self isiOS8Later]) {
+        self.wkWebView.frame = self.bounds;
+    } else {
+        self.uiWebView.frame = self.bounds;
+    }
 }
 
 #pragma mark - dealloc
